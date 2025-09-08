@@ -22,19 +22,20 @@ import axios from 'axios';
 // Insert Product
 let productInsert = async (req, res) => {
   try {
-    let { title, price, description, category, image, rating } = req.body;
+   let { title, price, description, category, image, rating } = req.body;
 
-    let product = new productModel({
-      title,
-      price,
-      description,
-      category,
-      image,
-      rating:{
-        rate,
-        count
-      }
-    });
+let product = new productModel({
+  title,
+  price,
+  description,
+  category,
+  image,
+  rating: {
+    rate: rating?.rate || 0,
+    count: rating?.count || 0
+  }
+});
+
 
     await product.save();
     res.status(200).json({ status: 1, message: "Product inserted successfully" });

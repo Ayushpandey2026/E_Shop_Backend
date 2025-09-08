@@ -1,12 +1,12 @@
 import express from "express";
-import { forgotPassword, login ,resetPassword } from "../controllers/authController.js";
-import { signup } from "../controllers/authController.js";
+import { login, signup, forgotPassword, resetPassword } from "../controllers/authController.js";
 
-const authRouter = express.Router();
+const router = express.Router();
 
-authRouter.post("/login",login);
-authRouter.post("/signup",signup);
+// auth
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 
-authRouter.post("/forgot-password",forgotPassword)
-authRouter.put("/reset-password/:token",resetPassword);
-export default authRouter;
+export default router;
