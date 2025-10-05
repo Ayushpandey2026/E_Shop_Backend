@@ -17,16 +17,16 @@ router.post("/add", verifyToken, async (req, res) => {
     }
 
     // 🔍 Agar user decode nahi hua
-    if (!req.user || !req.user.userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized - Invalid token" });
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ success: false, message: "Unauthorized h bhai - Invalid token" });
     }
 
-    let cart = await Cart.findOne({ userId: req.user.userId });
+    let cart = await Cart.findOne({ userId: req.user.id });
 
     if (!cart) {
       // 🆕 New cart create
       cart = new Cart({
-        userId: req.user.userId,
+        userId: req.user.id,
         items: [{ productId, quantity: quantity || 1 }],
       });
     } else {
@@ -55,11 +55,11 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     console.log("REQ.USER ===>", req.user);
 
-    if (!req.user || !req.user.userId) {
+    if (!req.user || !req.user.id) {
       return res.status(401).json({ success: false, message: "Unauthorized - Invalid token" });
     }
 
-    const cart = await Cart.findOne({ userId: req.user.userId }).populate("items.productId");
+    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
 
     if (!cart) {
       return res.status(200).json({ success: true, items: [] });
@@ -84,7 +84,7 @@ router.get("/", verifyToken, async (req, res) => {
     return res.status(400).json({ success: false, message: "ProductId is required" });
   }
 
-  const cart = await Cart.findOne({ userId: req.user.userId });
+  const cart = await Cart.findOne({ userId: req.user.id });
 
   if (!cart || !Array.isArray(cart.items)) {
     return res.status(404).json({ success: false, message: "Cart not found or items missing" });
@@ -125,7 +125,7 @@ router.put("/update", verifyToken, async (req, res) => {
       });
     }
 
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     // ✅ Find the cart
     let cart = await Cart.findOne({ userId }).populate("items.productId");
@@ -183,7 +183,7 @@ router.put("/update", verifyToken, async (req, res) => {
 // routes/cart.js
 router.get("/count", verifyToken, async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user.userId });
+    const cart = await Cart.findOne({ userId: req.user.id });
     const count = cart ? cart.items.reduce((acc, item) => acc + item.quantity, 0) : 0;
     res.json({ count });
   } catch (err) {

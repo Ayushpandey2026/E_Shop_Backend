@@ -1,25 +1,24 @@
+// middleware/auth.js
 import jwt from "jsonwebtoken";
-
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) return res.status(401).json({ msg: "No token provided" });
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token" });
 
-  const token = authHeader.split(" ")[1]; // "Bearer <token>"
-  if (!token) return res.status(401).json({ msg: "Invalid token format" });
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(401).json({ msg: "Unauthorized - Invalid token" });
-    req.user = { userId: decoded.id };
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
+    req.user = decoded;
+    console.log("req.user set to:", req.user);
     next();
-  });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+  }
 };
 
-
-// Admin-only routes ke liye
-export const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
-    next(); // ✅ Allowed
-  } else {
-    res.status(403).json({ message: "Not authorized as admin" });
+// ✅ Only Admin Access
+export const adminOnly = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied: Admin only" });
   }
+  next();
 };

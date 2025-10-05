@@ -1,7 +1,7 @@
 import productModel from "../models/Product.js";
 import axios from 'axios'; 
 
- const seedData = async () => {
+ const seedData = async (req, res) => {
   try {
      const existingCount = await productModel.countDocuments();
     if (existingCount > 0) {
@@ -12,10 +12,11 @@ import axios from 'axios';
     await productModel.deleteMany({});
     await productModel.insertMany(response.data);
     console.log("Products seeded successfully");
+    res.status(200).send("Products seeded successfully");
   }
   catch (error) {
     console.error("Error fetching data from API:", error);
-    return;
+    res.status(500).send("Error seeding products");
   }
 }
 
@@ -45,15 +46,36 @@ let product = new productModel({
 };
 
 // List All Products
+// List All Products with Filtering and Sorting
 let productList = async (req, res) => {
   try {
-    let data = await productModel.find();
+    const { category, minPrice, maxPrice, sort } = req.query;
+
+    // Filtering
+    let filter = {};
+    if (category) filter.category = category;
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    let query = productModel.find(filter);
+
+    // Sorting
+    if (sort === "lowToHigh") query = query.sort({ price: 1 });
+    else if (sort === "highToLow") query = query.sort({ price: -1 });
+    else if (sort === "latest") query = query.sort({ createdAt: -1 });
+
+    const data = await query;
+
     if (data.length > 0) {
-      return res.json(data);
+      return res.status(200).json(data);
     } else {
-      res.status(404).json({ status: 0, message: "No products found" });
+      return res.status(404).json({ status: 0, message: "No products found" });
     }
   } catch (error) {
+    console.error("Product fetch error:", error);
     res.status(500).json({ status: 0, message: "Server error", error: error.message });
   }
 };
@@ -132,4 +154,5 @@ let productUpdate = async (req, res) => {
   }
 };
 
-export { productInsert, productList, productDelete, productGet, productUpdate , seedData };
+
+export { productInsert, productList, productDelete, productGet, productUpdate , seedData }

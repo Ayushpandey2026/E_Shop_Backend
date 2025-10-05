@@ -9,11 +9,11 @@ export const createOrders = async(req,res)=>{
         }
         const totalAmount = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-        if(!req.user || ! req.user.userId){
+        if(!req.user || ! req.user.id){
             return res.status(404).json({success:"false",message:"not authorised"})
         }
         const order = await Order.create({
-  userId: req.user.userId,
+  userId: req.user.id,
   items,
   shippingAddress,
   totalAmount,
@@ -36,7 +36,7 @@ export const createOrders = async(req,res)=>{
 // GET /api/orders/my
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user.userId })
+    const orders = await Order.find({ userId: req.user.id })
       .populate("items.productId", "title image category")
       .sort({ createdAt: -1 });
 
