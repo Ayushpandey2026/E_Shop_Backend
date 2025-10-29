@@ -4,7 +4,6 @@ import { verifyToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Get reviews by productId
 router.get("/", getReviewsByProduct);
 
 // Create a new review
