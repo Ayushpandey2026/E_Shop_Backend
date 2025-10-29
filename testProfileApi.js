@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const token = "1759344489"; // Replace with a valid token
+const token = "1759344489"; 
 
 const testProfileApi = async () => {
   try {
