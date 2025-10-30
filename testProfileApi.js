@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const token = "1759344489"; 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTFiNzlhYjUxN2VkNjkyNmM3MWZmZSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzYxODM0OTg0LCJleHAiOjE3NjI0Mzk3ODR9.Bb3iRGlFG-mqWlrR8HAARGuYOmGvQMOEdNx7z8MVfd0";
 
 const testProfileApi = async () => {
   try {

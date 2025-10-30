@@ -18,8 +18,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", 
-      "https://job-portal-4uow.vercel.app"
+      "http://localhost:5173",
+      "https://job-portal-4uow.vercel.app",
+      "https://e-shop-frontend-1.onrender.com" // Add your deployed frontend URL
     ],
     credentials: true,
   })
