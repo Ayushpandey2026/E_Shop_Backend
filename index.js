@@ -19,8 +19,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:5175",
+      "http://localhost:5176",
       "https://job-portal-4uow.vercel.app",
-      "https://e-shop-frontend-1.onrender.com" // Add your deployed frontend URL
+      "https://e-shop-frontend-1.onrender.com",
+      "https://everbuy.vercel.app" // Deployed frontend URL
     ],
     credentials: true,
   })
