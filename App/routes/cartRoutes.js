@@ -59,7 +59,7 @@ router.get("/", verifyToken, async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized - Invalid token" });
     }
 
-    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
+    const cart = await Cart.findOne({ userId: req.user.id });
 
     if (!cart) {
       return res.status(200).json({ success: true, items: [] });

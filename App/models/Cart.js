@@ -8,9 +8,9 @@ const cartSchema = new mongoose.Schema({
         },
         items:[
             {
+                // Store as string to accept both numeric IDs and ObjectId strings
                 productId:{
-                    type:mongoose.Schema.ObjectId,
-                    ref:"Product",
+                    type:String,
                     required:true
                 },
                 quantity:{

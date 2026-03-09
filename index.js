@@ -9,6 +9,7 @@ import cartRouter from "./App/routes/cartRoutes.js";
 import orderRouter from "./App/routes/orderRoutes.js";
 import adminRouter from "./App/routes/adminRoutes.js";
 import analyticsRoute from "./App/routes/analyticsRoute.js";
+import userRouter from "./App/routes/userRoutes.js";
 
 // import paymentRouter from "./App/routes/paymentRoutes.js"
 dotenv.config();
@@ -21,7 +22,6 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5175",
       "http://localhost:5176",
-      "https://job-portal-4uow.vercel.app",
       "https://e-shop-frontend-1.onrender.com",
       "https://everbuy.vercel.app" // Deployed frontend URL
     ],
@@ -40,7 +40,6 @@ app.use("/api/web/product", productRouter);
 app.use("/api/web/cart", cartRouter);
 app.use("/api/web/order",orderRouter);
 app.use("/api/web/review", reviewRouter);
-import userRouter from "./App/routes/userRoutes.js";
 app.use("/api/web/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/admin/analytics", analyticsRoute);

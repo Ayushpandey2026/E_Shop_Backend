@@ -13,14 +13,12 @@ export const createOrders = async(req,res)=>{
             return res.status(404).json({success:"false",message:"not authorised"})
         }
         const order = await Order.create({
-  userId: req.user.id,
-  items,
-  shippingAddress,
-  totalAmount,
-  status: "Pending", // default
-});
-
-    
+              userId: req.user.id,
+              items,
+              shippingAddress,
+              totalAmount,
+              status: "Pending", // default
+          });
         res.status(201).json({
       success: true,
       message: "Order created successfully",
