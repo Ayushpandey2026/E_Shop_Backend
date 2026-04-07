@@ -4,10 +4,8 @@ import User from "../models/User.js";
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmails.js";
 
-const jwtSecret = process.env.JWT_SECRET || "4297b38ddb1583e077089a57a2d527312222a63519d8661eeeef12d451ebf4f56ba1b37e6625a7bd2ab059a9b7fa4eef392bd1d130267231ecae2df56ad1c0304";
-
 const signToken = (userId) =>
-  jwt.sign({ id: userId }, jwtSecret, { expiresIn: "1h" });
+  jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
 export const signup = async (req, res) => {
   try {
@@ -24,7 +22,7 @@ export const signup = async (req, res) => {
     const user = await User.create({ name, email: lowerEmail, password: hashed });
      const token = jwt.sign(
       { id: user._id, role: user.role },
-      jwtSecret,
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
     return res.status(201).json({ token, message: "User created", user: { id: user._id, name: user.name, email: user.email } });
@@ -36,20 +34,19 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;  //  role bhi frontend se ayega (user/admin)
+    const { email, password, role } = req.body;  
     if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
 
     const trimmedEmail = email.trim();
     const lowerEmail = trimmedEmail.toLowerCase();
 
     console.log("Searching for email:", lowerEmail);
-    const user = await User.findOne({ email: { $regex: new RegExp(`^${lowerEmail}$`, 'i') } });
+    const user = await User.findOne({ email: lowerEmail });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(password, user.password); // ✅ direct bcrypt compare
+    const isMatch = await bcrypt.compare(password, user.password); 
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    // ✅ role check karo
     if (role && user.role !== role) {
       return res.status(403).json({ message: `This account is not ${role}` });
     }
@@ -74,7 +71,6 @@ export const login = async (req, res) => {
   }
 };
 
-// Forgot / Reset (as you already had; kept minimal)
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -82,7 +78,7 @@ export const forgotPassword = async (req, res) => {
 
     const trimmedEmail = email.trim();
     const lowerEmail = trimmedEmail.toLowerCase();
-    const user = await User.findOne({ email: { $regex: new RegExp(`^${lowerEmail}$`, 'i') } });
+    const user = await User.findOne({ email: lowerEmail });
     if(!user) return res.status(404).json({ message: "User not found" });
 
     const resetToken = crypto.randomBytes(20).toString("hex");
@@ -102,6 +98,42 @@ export const forgotPassword = async (req, res) => {
   } catch (e) {
     console.error(e);
     return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, phone } = req.body;
+    const userId = req.user.id;
+    
+    if (!name || !email) {
+      return res.status(400).json({ message: 'Name and email required' });
+    }
+    
+    const updateData = { name, email };
+    if (phone) updateData.phone = phone;
+    
+    if (req.file) {
+      updateData.avatar = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    }
+    
+    const user = await User.findByIdAndUpdate(
+      userId, 
+      updateData,
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({ 
+      message: 'Profile updated successfully', 
+      user 
+    });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -133,8 +165,4 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
-
-
-
-
 

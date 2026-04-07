@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin"],
     default: "user"   // by default every new user is a normal user
   },
+  phone: { type: String },
+  avatar: { type: String },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });

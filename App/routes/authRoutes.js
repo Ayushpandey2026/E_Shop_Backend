@@ -1,7 +1,8 @@
 import express from "express";
-import { login, signup, forgotPassword, resetPassword } from "../controllers/authController.js";
-import User from "../models/User.js";
+import { login, signup, forgotPassword, resetPassword, updateProfile } from "../controllers/authController.js";
 import { verifyToken } from "../middlewares/authMiddleware.js";
+import { singleAvatarUpload } from "../middlewares/uploadMiddleware.js";
+import User from "../models/User.js";
 const router = express.Router();
 
 // auth
@@ -21,4 +22,9 @@ router.get("/profile", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// ✅ Update profile (with avatar upload)
+router.put("/updateProfile", verifyToken, singleAvatarUpload, updateProfile);
+
 export default router;
+

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const token = "";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
 
 const testProfileApi = async () => {
   try {
