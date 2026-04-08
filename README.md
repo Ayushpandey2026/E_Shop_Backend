@@ -15,7 +15,7 @@ It is built with **Node.js, Express.js, MongoDB, and Mongoose**, providing REST 
 - MongoDB Integration with Mongoose
 
 ---
-
+<pre>
 ## 📂 Folder Structure
 backend/
 │── controllers/ # API logic
@@ -27,7 +27,7 @@ backend/
 │── package.json
 │── .env # Environment variables
 
-
+</pre>
 
 ---
 
