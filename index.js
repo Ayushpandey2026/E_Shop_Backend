@@ -12,6 +12,7 @@ import adminRouter from "./App/routes/adminRoutes.js";
 import analyticsRoute from "./App/routes/analyticsRoute.js";
 import userRouter from "./App/routes/userRoutes.js";
 import enquiryRouter from "./App/routes/enquiryRoutes.js";
+import wishlistRouter from "./App/routes/wishlistRoutes.js";
 
 
 
@@ -28,6 +29,7 @@ app.use(
   cors({
     origin: [
       "https://everbuy.vercel.app",
+      "http://localhost:5174",
       "https://e-shop-frontend-1.onrender.com"
     ],
     credentials: true,
@@ -45,6 +47,7 @@ app.use("/api/web/cart", cartRouter);
 app.use("/api/web/order",orderRouter);
 app.use("/api/web/review", reviewRouter);
 app.use("/api/web/user", userRouter);
+app.use("/api/web/wishlist", wishlistRouter);
 app.use("/api/web/enquiry", enquiryRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/admin/analytics", analyticsRoute);

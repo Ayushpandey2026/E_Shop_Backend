@@ -1,5 +1,5 @@
 import express from "express";
-import { login, signup, forgotPassword, resetPassword, updateProfile } from "../controllers/authController.js";
+import { login, signup, forgotPassword, resetPassword, updateProfile, changePassword } from "../controllers/authController.js";
 import { verifyToken } from "../middlewares/authMiddleware.js";
 import { singleAvatarUpload } from "../middlewares/uploadMiddleware.js";
 import User from "../models/User.js";
@@ -10,6 +10,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
+router.post("/change-password", verifyToken, changePassword);
 
 // ✅ Get user profile
 router.get("/profile", verifyToken, async (req, res) => {
